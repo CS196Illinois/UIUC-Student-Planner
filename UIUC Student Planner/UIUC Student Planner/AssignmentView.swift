@@ -15,21 +15,38 @@ struct AssignmentView: View {
     @State var assignment: Assignment
     
     var body: some View {
-            VStack(alignment: .leading, spacing: 20) {
-                    Text((assignment.name ?? "Test Assignment"))
-                            .font(.largeTitle)
-                        .fontWeight(.medium)
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 20) {
                     HStack {
-                        Text("\(assignment.dueDate ?? Date(), formatter: dayFormatter)")
-                        Spacer()
-                        Text("\(assignment.points) Points")
-                            .foregroundColor(Color.green)
+                        Text((assignment.name ?? "Test Assignment"))
+                                .font(.largeTitle)
+                            .fontWeight(.medium)
+                    Spacer()
+                    //Text("📌")
+                        if assignment.pinned == true {
+                        Text("📌")
+                        }
                     }
-                    Text("\(assignment.dueDate ?? Date(), formatter: timeFormatter)")
-                }.toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Edit", action: {
+                    VStack(alignment: .leading, spacing: 5) {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("\(assignment.dueDate ?? Date(), formatter: dayFormatter)")
+                            Spacer()
+                            Text("\(assignment.points) Points")
+                                .foregroundColor(Color.green)
+                        }
+                        VStack (spacing: 30) {
+                        HStack {
+                            Text("\(assignment.dueDate ?? Date(), formatter: timeFormatter)  ")
+                            Spacer()
+                            Text("\( assignment.priority ) Priority ").foregroundColor(.red)
+                        }
+                            Text("Description: \( assignment.userDescription ?? "Description has not been provided.") ").multilineTextAlignment(.center)
+                        }
+                        
+                        Text("\(assignment.dueDate ?? Date(), formatter: timeFormatter)")
+                    }.toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Edit", action: {
                             self.isPresented.toggle();
                         })
                     }
@@ -43,7 +60,7 @@ struct AssignmentView: View {
             .padding()
             .navigationBarTitleDisplayMode(.inline)
         }
-    
+    }
        
     
     private let dayFormatter: DateFormatter = {

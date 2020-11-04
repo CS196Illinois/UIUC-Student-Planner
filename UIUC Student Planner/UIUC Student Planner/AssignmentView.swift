@@ -17,7 +17,7 @@ struct AssignmentView: View {
     var body: some View {
                 VStack(alignment: .leading, spacing: 20) {
                     HStack {
-                        Text((assignment.name ?? "Test Assignment"))
+                        Text((assignment.name ?? " Test Assignment"))
                                 .font(.largeTitle)
                             .fontWeight(.medium)
                     Spacer()
@@ -26,24 +26,24 @@ struct AssignmentView: View {
                         Text("📌")
                         }
                     }
-                    VStack(alignment: .leading, spacing: 5) {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 10) {
                         HStack {
                             Text("\(assignment.dueDate ?? Date(), formatter: dayFormatter)")
                             Spacer()
                             Text("\(assignment.points) Points")
                                 .foregroundColor(Color.green)
                         }
-                        VStack (spacing: 30) {
+                        VStack (spacing: 20) {
                         HStack {
                             Text("\(assignment.dueDate ?? Date(), formatter: timeFormatter)  ")
                             Spacer()
                             Text("\( assignment.priority ) Priority ").foregroundColor(.red)
                         }
                             Text("Description: \( assignment.userDescription ?? "Description has not been provided.") ").multilineTextAlignment(.center)
+                            Link("Click to vist the assignment webpade", destination: assignment.linkToAssignment ?? URL(string: "https://learn.illinois.edu/")!)
                         }
                         
-                        Text("\(assignment.dueDate ?? Date(), formatter: timeFormatter)")
+                        
                     }.toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button("Edit", action: {
@@ -60,7 +60,7 @@ struct AssignmentView: View {
             .padding()
             .navigationBarTitleDisplayMode(.inline)
         }
-    }
+    
        
     
     private let dayFormatter: DateFormatter = {

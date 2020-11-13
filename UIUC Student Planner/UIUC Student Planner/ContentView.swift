@@ -28,7 +28,6 @@ struct ContentView: View {
             List {
                 ForEach(items) { item in
                     NavigationLink(destination:AssignmentView(assignment: item)) {
-                        //                       Text("Item at \(item.timestamp!, formatter: itemFormatter)") // creates the text in the list
                         HStack {
                             AssignmentAttributes(assignment: item)
                                 .cornerRadius(15)
@@ -54,11 +53,6 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
                 }
-                
-                //                ToolbarItem( placement: .navigationBarTrailing) {
-                //                    CircleImage()
-                //                }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {self.showingDetail.toggle()}) {
                         Label("Add Item", systemImage: "plus")

@@ -1,3 +1,4 @@
+ 
 import SwiftUI
 import CoreData
 
@@ -17,30 +18,37 @@ struct ContentView: View {
     
     //The fetch request getting all the assignments and sorting them by their timestamps
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Assignment.dueDate, ascending: true)],
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Assignment.pinned, ascending: false),
+            NSSortDescriptor(keyPath: \Assignment.dueDate, ascending: false)
+        ],
         animation: .default)
     private var items: FetchedResults<Assignment>
-    
+    var test = "hello"
     @State private var showingDetail = false
-    
+    @State private var showingFilters = false
+    @State private var sort: Int = 0
+    @State private var isPinned = Order()
     var body: some View {
+        let FilterObject = Order();
         NavigationView {
             List {
                 ForEach(items) { item in
-                    NavigationLink(destination:AssignmentView(assignment: item)) {
-                        //                       Text("Item at \(item.timestamp!, formatter: itemFormatter)") // creates the text in the list
-                        HStack {
-                            AssignmentAttributes(assignment: item)
-                                .cornerRadius(15)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 7)
-                                .foregroundColor(.white)
+                    if (FilterObject.isNotFiltered(assignment: item)) {
+                        NavigationLink(destination:AssignmentView(assignment: item)) {
+                            HStack {
+                                AssignmentAttributes(assignment: item)
+                                    .cornerRadius(15)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 7)
+                                    .foregroundColor(.white)
+                            }
+                            
                         }
-                        
-                    }
+                        }
                 }
                 .onDelete(perform: deleteItems)
                 .background(Color.ListBackground)
@@ -54,23 +62,46 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
                 }
-                
-                //                ToolbarItem( placement: .navigationBarTrailing) {
-                //                    CircleImage()
-                //                }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {self.showingDetail.toggle()}) {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
+               
+                ToolbarItem(placement: .primaryAction) {
+//                    Menu {
+//                        Picker(selection: $sort, label: Text("Sorting options")) {
+////                            Button(action: {selectedSorts.append("MinPoint")}) {
+////                                Label("Min Points", systemImage: "bolt")
+////                            }
+////                            Button(action: {}) {
+////                                Label("Create a folder", systemImage: "folder")
+////                            }
+//                            ForEach(0 ..< filters.count) {
+//                               Text(self.filters[$0])
+//                            }
+//                        }
+//                    }
+//                    label: {
+//                        Label("Sort", systemImage: "arrow.up.arrow.down")
+//                    }
+                    Button(action: {self.showingFilters.toggle()}) {
+                        Label("Add Item", systemImage: "arrow.up.arrow.down")
+                    }
+            }
             }
         }
         .sheet(isPresented: $showingDetail) {
             AddAssignmentView()
         }
+        .sheet(isPresented: $showingFilters) {
+            FilterModalView(isPinned: $isPinned)
+        }
     }
     
+    private func addSort(sort: String) {
+       
+    }
     private func addItem() {
         withAnimation {
             let newItem = Assignment(context: viewContext)
@@ -117,3 +148,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
+

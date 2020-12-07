@@ -41,7 +41,7 @@ struct AssignmentAttributes: View {
                                 .foregroundColor(.white)
                         }
                     }
-                    
+                   
                     Text("Due Date: \(assignment.dueDate ?? Date(), formatter: dayFormatter)")
                         .padding(.bottom, 5)
                         .foregroundColor(Color.white)

@@ -29,14 +29,16 @@ struct ContentView: View {
     @State private var showingFilters = false
     @State private var sort: Int = 0
     @State private var isPinned = Order()
+    private var filters = ["None","Min Points", "Pinned", "Max Points"]
     var body: some View {
         let FilterObject = Order();
         NavigationView {
             List {
                 ForEach(items) { item in
-                    if (FilterObject.isNotFiltered(assignment: item)) {
+                    if (FilterObject.isNotFiltered(assignment: item, selectedSorts: filters[sort])) {
                         NavigationLink(destination:AssignmentView(assignment: item)) {
                             HStack {
+                                
                                 AssignmentAttributes(assignment: item)
                                     .cornerRadius(15)
                                 Spacer()
@@ -69,24 +71,21 @@ struct ContentView: View {
                 }
                
                 ToolbarItem(placement: .primaryAction) {
-//                    Menu {
-//                        Picker(selection: $sort, label: Text("Sorting options")) {
-////                            Button(action: {selectedSorts.append("MinPoint")}) {
-////                                Label("Min Points", systemImage: "bolt")
-////                            }
-////                            Button(action: {}) {
-////                                Label("Create a folder", systemImage: "folder")
-////                            }
-//                            ForEach(0 ..< filters.count) {
-//                               Text(self.filters[$0])
+                    Menu {
+                        Picker(selection: $sort, label: Text("Sorting options")) {
+//                            Button(action: {selectedSorts.append("MinPoint")}) {
+//                                Label("Min Points", systemImage: "bolt")
 //                            }
-//                        }
-//                    }
-//                    label: {
-//                        Label("Sort", systemImage: "arrow.up.arrow.down")
-//                    }
-                    Button(action: {self.showingFilters.toggle()}) {
-                        Label("Add Item", systemImage: "arrow.up.arrow.down")
+//                            Button(action: {}) {
+//                                Label("Create a folder", systemImage: "folder")
+//                            }
+                            ForEach(0 ..< filters.count) {
+                               Text(self.filters[$0])
+                            }
+                        }
+                    }
+                    label: {
+                        Label("Sort", systemImage: "arrow.up.arrow.down")
                     }
             }
             }
@@ -94,9 +93,9 @@ struct ContentView: View {
         .sheet(isPresented: $showingDetail) {
             AddAssignmentView()
         }
-        .sheet(isPresented: $showingFilters) {
-            FilterModalView(isPinned: $isPinned)
-        }
+//        .sheet(isPresented: $showingFilters) {
+//            FilterModalView(isPinned: $isPinned)
+//        }
     }
     
     private func addSort(sort: String) {
